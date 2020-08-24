@@ -1,4 +1,4 @@
-package connection;
+package Table;
 
 import java.lang.annotation.*;
 

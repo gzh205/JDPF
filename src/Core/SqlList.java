@@ -1,4 +1,4 @@
-package connection;
+package Core;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;

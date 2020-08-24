@@ -1,9 +1,11 @@
-package connection;
+package Core;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class SqlConn {
 	public static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -15,7 +17,7 @@ public class SqlConn {
 	public static SqlConn getSession(HostInfo info) throws Exception {
 		if(SqlConn.conn==null) {
 			SqlConn.conn = new SqlConn();
-			if(!info.valid()) throw new Exception("HostInfo¶ÔÏóÓÐÎª³õÊ¼»¯µÄ³ÉÔ±");
+			if(!info.valid()) throw new Exception("HostInfoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ä³ï¿½Ô±");
 			SqlConn.conn.info = info;
 			return SqlConn.conn;
 		}else {
@@ -42,14 +44,14 @@ public class SqlConn {
 		}
 		return result;
 	}
-	public void select(Table table) throws Exception {	
+	public void select(Object table) throws Exception {
 		String sql = "select ";
 		String selectDat = "";
 		String whereDat = "";
 		Field[] fields = table.getClass().getFields();
 		for(Field f:fields) {
 			selectDat += "," + f.getName();
-			if(f.getAnnotation(PrimaryKey.class)!=null) {
+			if(f.getAnnotation(Table.PrimaryKey.class)!=null) {
 				try {
 					if(f.getType()==String.class||f.getType()==Date.class)
 						whereDat += " " + f.getName() + "='" + f.get(table) + "' ";
@@ -129,14 +131,14 @@ public class SqlConn {
 		this.close();
 		return lst;
 	}
-	public boolean alter(Table table) {
+	public boolean alter(Object table) {
 		String sql = "update ";
 		String setData = "";
 		String whereData = "";
 		Field[] fields = table.getClass().getFields();
 		for(Field f:fields) {			
 			try {
-				if(f.getAnnotation(PrimaryKey.class)!=null) {
+				if(f.getAnnotation(Table.PrimaryKey.class)!=null) {
 					if(f.getType()==String.class||f.getType()==Date.class)
 						whereData += " and " + f.getName() + " = '" + f.get(table) + "'";
 					else
@@ -161,14 +163,14 @@ public class SqlConn {
 		this.close();
 		return res;
 	}
-	public boolean delete(Table table) {
+	public boolean delete(Object table) {
 		String sql = "delete from ";
 		String whereData = "";
 		Field[] fields = table.getClass().getFields();
 		for(Field f:fields) {
-			if(f.getAnnotation(PrimaryKey.class)!=null) {			
+			if(f.getAnnotation(Table.PrimaryKey.class)!=null) {
 				try {
-					if(f.getType()==String.class||f.getType()==java.sql.Date.class) {
+					if(f.getType()==String.class||f.getType()== Date.class) {
 						whereData += " and " + f.getName() + " = '" + f.get(table) + "'";
 					}else {
 						whereData += " and " + f.getName() + " = " + f.get(table);
@@ -188,7 +190,7 @@ public class SqlConn {
 		this.close();
 		return res;
 	}
-	public boolean insert(Table table) {
+	public boolean insert(Object table) {
 		String sql = "insert into ";
 		String data = "";
 		String valuesData = "";
@@ -266,7 +268,7 @@ public class SqlConn {
 			if(type==String.class) {
 				return (Object)res.getString(num);
 			}
-			else if(type==java.sql.Date.class) {
+			else if(type== Date.class) {
 				return (Object)res.getDate(num);
 			}
 			else if(type==int.class) {
@@ -278,17 +280,17 @@ public class SqlConn {
 			else if(type==float.class) {
 				return (Object)res.getFloat(num);
 			}
-			else if(type==java.sql.Blob.class) {
+			else if(type== Blob.class) {
 				return (Object)res.getBlob(num);
 			}
-			else if(type==java.sql.Clob.class) {
+			else if(type== Clob.class) {
 				return (Object)res.getClob(num);
 			}
 			else if(type==byte.class) {
 				return (Object)res.getByte(num);
 			}
 			else{
-				throw new Exception("SqlConn.getResultµÄµÚÈý¸ö²ÎÊý´íÎó£¬Type¶ÔÏó²»ºÏÒªÇó(¿ÉÄÜÎªnull)");
+				throw new Exception("SqlConn.getResultï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Typeï¿½ï¿½ï¿½ó²»ºï¿½Òªï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Îªnull)");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

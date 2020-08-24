@@ -1,4 +1,4 @@
-package connection;
+package Core;
 
 public class HostInfo {
 	public String host;
