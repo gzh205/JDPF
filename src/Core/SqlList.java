@@ -18,7 +18,4 @@ public class SqlList<T>{
 	public void add(T t) {
 		list.add(t);
 	}
-	public T[] toArray() {
-		return list.toArray();
-	}
 }
